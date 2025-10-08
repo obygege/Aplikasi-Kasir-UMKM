@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        if (sessionStorage.getItem('userRole') !== 'penjual') { window.location.href = '../index.html'; }
+    </script>
+    <title>Dashboard Penjual</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body class="bg-gray-100">
+    <div class="flex h-screen bg-gray-200">
+        <div class="hidden md:flex md:w-64 bg-gradient-to-b from-red-700 to-yellow-500 text-white flex-col">
+            <div class="px-8 py-6 text-2xl font-bold border-b border-red-800">Penjual Panel</div>
+            <nav class="flex-1 px-4 py-4 space-y-2">
+                <a href="#dashboard" class="nav-link active flex items-center px-4 py-2 rounded-lg hover:bg-yellow-400 hover:text-red-800"><i class="fas fa-chart-pie w-6"></i>Dashboard</a>
+                <a href="#kasir" class="nav-link flex items-center px-4 py-2 rounded-lg hover:bg-yellow-400 hover:text-red-800"><i class="fas fa-cash-register w-6"></i>Kasir</a>
+                <a href="#input-data" class="nav-link flex items-center px-4 py-2 rounded-lg hover:bg-yellow-400 hover:text-red-800"><i class="fas fa-edit w-6"></i>Input Data</a>
+                <a href="#catatan" class="nav-link flex items-center px-4 py-2 rounded-lg hover:bg-yellow-400 hover:text-red-800"><i class="fas fa-book w-6"></i>Catatan</a>
+            </nav>
+            <div class="px-4 py-4"><a href="#" class="logout-btn flex items-center px-4 py-2 rounded-lg text-red-200 hover:bg-red-800"><i class="fas fa-sign-out-alt w-6"></i>Logout</a></div>
+        </div>
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <header class="flex justify-between items-center p-6 bg-white border-b">
+                <h1 class="text-3xl font-bold text-gray-800" id="page-title">Dashboard</h1>
+                <div class="text-sm font-semibold">Selamat Datang, Penjual!</div>
+            </header>
+            <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-4 md:p-6 pb-20 md:pb-6">
+                <div id="dashboard" class="page-content">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="bg-gradient-to-r from-red-500 to-yellow-400 text-white rounded-lg shadow-lg p-6">
+                            <h2 class="text-xl font-semibold">Penjualan Hari Ini</h2>
+                            <p class="text-4xl font-bold mt-2" id="total-penjualan-hari-ini">0</p>
+                        </div>
+                        <div class="bg-gradient-to-r from-red-500 to-yellow-400 text-white rounded-lg shadow-lg p-6">
+                            <h2 class="text-xl font-semibold">Pemasukan Hari Ini</h2>
+                            <p class="text-4xl font-bold mt-2" id="total-pemasukan-hari-ini">Rp 0</p>
+                        </div>
+                        <div class="bg-gradient-to-r from-red-500 to-yellow-400 text-white rounded-lg shadow-lg p-6">
+                            <h2 class="text-xl font-semibold">Keuntungan Hari Ini</h2>
+                            <p class="text-4xl font-bold mt-2" id="total-keuntungan-hari-ini">Rp 0</p>
+                        </div>
+                    </div>
+                </div>
+                <div id="kasir" class="page-content hidden">
+                    <div class="bg-white p-4 md:p-8 rounded-lg shadow-lg">
+                        <h2 class="text-2xl font-bold mb-6">Pilih Produk</h2>
+                        <div id="product-list" class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6"></div>
+                        <div class="mt-8 border-t pt-6">
+                            <h3 class="text-xl font-semibold">Keranjang</h3>
+                            <div id="cart-items" class="mt-4 space-y-2"></div>
+                            <div class="mt-6 border-t pt-4 space-y-3 text-lg">
+                                <div class="flex justify-between font-bold text-xl"><span>Total Belanja:</span><span id="cart-total">Rp 0</span></div>
+                                <div class="flex justify-between items-center">
+                                    <label for="uang-bayar" class="font-semibold">Uang Bayar:</label>
+                                    <input type="number" id="uang-bayar" class="w-1/2 p-2 border rounded-lg text-right font-bold" placeholder="0">
+                                </div>
+                                <div class="flex justify-between font-bold text-green-600 text-xl"><span>Kembalian:</span><span id="kembalian">Rp 0</span></div>
+                            </div>
+                            <button id="bayar-btn" class="mt-6 w-full bg-red-600 text-white py-3 rounded-lg font-bold">PROSES BAYAR</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="input-data" class="page-content hidden">
+                    <div class="bg-white p-6 md:p-8 rounded-lg shadow-lg max-w-lg mx-auto">
+                        <h2 class="text-2xl font-bold mb-6">Input Transaksi Manual</h2>
+                        <form id="transaction-form" class="space-y-4">
+                            <select id="transaction-type" class="w-full p-3 border rounded-lg"><option value="income">Pemasukan Lain</option><option value="expense">Pengeluaran (Modal)</option></select>
+                            <input type="text" id="transaction-description" placeholder="Deskripsi" class="w-full p-3 border rounded-lg" required>
+                            <input type="number" id="transaction-amount" placeholder="Jumlah" class="w-full p-3 border rounded-lg" required>
+                            <button type="submit" class="w-full bg-red-600 text-white py-3 rounded-lg font-bold">Simpan</button>
+                        </form>
+                    </div>
+                </div>
+                <div id="catatan" class="page-content hidden">
+                    <div class="bg-white p-4 md:p-8 rounded-lg shadow-lg">
+                        <h2 class="text-2xl font-bold mb-6">Semua Catatan Keuangan</h2>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left">
+                                <thead><tr class="bg-red-200"><th class="p-3">Waktu</th><th class="p-3">Deskripsi</th><th class="p-3">Jenis</th><th class="p-3">Jumlah</th></tr></thead>
+                                <tbody id="financial-records-body"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </main>
+            <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white shadow-lg flex justify-around border-t">
+                <a href="#dashboard" class="mobile-nav-link active flex flex-col items-center justify-center p-2 text-gray-500 w-full"><i class="fas fa-chart-pie"></i><span class="text-xs">Dashboard</span></a>
+                <a href="#kasir" class="mobile-nav-link flex flex-col items-center justify-center p-2 text-gray-500 w-full"><i class="fas fa-cash-register"></i><span class="text-xs">Kasir</span></a>
+                <a href="#input-data" class="mobile-nav-link flex flex-col items-center justify-center p-2 text-gray-500 w-full"><i class="fas fa-edit"></i><span class="text-xs">Input</span></a>
+                <a href="#catatan" class="mobile-nav-link flex flex-col items-center justify-center p-2 text-gray-500 w-full"><i class="fas fa-book"></i><span class="text-xs">Catatan</span></a>
+                <a href="#" class="logout-btn flex flex-col items-center justify-center p-2 text-gray-500 w-full"><i class="fas fa-sign-out-alt"></i><span class="text-xs">Logout</span></a>
+            </nav>
+        </div>
+    </div>
+    <script src="penjual.js"></script>
+</body>
+</html>

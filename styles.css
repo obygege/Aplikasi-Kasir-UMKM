@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.nav-link.active {
+  @apply bg-yellow-400 text-red-800;
+}
+
+.mobile-nav-link.active {
+    @apply text-red-700 border-t-2 border-red-700;
+}
